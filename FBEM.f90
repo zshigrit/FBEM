@@ -3,16 +3,16 @@ program main
         implicit none
       ! will use name list for key parameters
         real,parameter::Ox=0.21,Ca=410,Rgas=8.314 !Ca in ppm
-        real:: Ta=20.0,swc=0.35,I=500.0,RH=0.6,LAI=3.0 !driving force;I: absorbed PAR
+        real:: Ta=20.0,swc=0.35,I=1500.0,RH=0.6,LAI=5.0 !driving force;I: absorbed PAR
         real:: f_Ci,Ci,Tk,alpha_q
         real:: Vm_25,Ea_vm,Gamma_star25,Ea_gamma,Ea_Kc,Ea_Ko,Kc_25,Ko_25
         real:: r_JmVm
-        real:: gl,D0,kn
+        real:: g1,D0,kn
         real:: Reco0,Q10,a1
         real:: Vm,Gamma_star,Kc,Ko,Jm,Jc,Je,A
         real:: es,D,Gs,An,Ac,Reco,NEE
         namelist /main_para/ f_Ci,alpha_q,Vm_25,Ea_vm,Gamma_star25,Ea_gamma,Ea_Kc, &
-                             Ea_Ko,Kc_25,Ko_25,r_JmVm,gl,D0,kn,Reco0,Q10,a1
+                             Ea_Ko,Kc_25,Ko_25,r_JmVm,g1,D0,kn,Reco0,Q10,a1
 
         open(11,file='FBEM_namelist.nml')
         read(11,nml=main_para)
@@ -33,7 +33,7 @@ program main
         es = exp(21.382-5347.5/Tk)
         D = 0.1*es*(1-RH)
 
-        Gs = gl*A/((Ca-Gamma_star)*(1+D/D0))
+        Gs = g1*A/((Ca-Gamma_star)*(1+D/D0))
         An = Gs*(Ca-Ci)! top layer canopy photosynthesis
         Ac = An*(1.0-exp(-kn*LAI))/kn
 
