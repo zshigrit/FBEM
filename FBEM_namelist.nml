@@ -16,4 +16,5 @@
     Reco0=2.5
     Q10=2.0
     a1=0.1
+    photo_type = 'LUE'
 /

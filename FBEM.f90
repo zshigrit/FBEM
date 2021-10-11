@@ -14,20 +14,24 @@ program main
         real:: es,D,Gs,An,Ac,Reco,NEE
         character:: header
         integer:: istat3,day,hour
+        character:: photo_type ! CUE or FvCB
+        
         namelist /main_para/ f_Ci,alpha_q,Vm_25,Ea_vm,Gamma_star25,Ea_gamma,Ea_Kc, &
-                             Ea_Ko,Kc_25,Ko_25,r_JmVm,g1,D0,kn,Reco0,Q10,a1
+                             Ea_Ko,Kc_25,Ko_25,r_JmVm,g1,D0,kn,Reco0,Q10,a1,photo_type
 
         open(11,file='FBEM_namelist.nml')
         read(11,nml=main_para)
         close(11)
         
+        ! read in climate and biologicla data
         open(12,file='tair_rh_rad_hourly.in')!,status='old',access ='sequential',form='formatted')
         open(13,file='df_swc_daily.in')
         open(14,file='df_lai_daily.in')
-        !read(12,*) header
+        read(12,*) header
         read(13,*) header
         read(14,*) header
         
+        !write outputs header
         open(15,file='cflux.out',status='new')
         write(15,*)'An,Ac,Reco,NEE'
         
@@ -51,7 +55,6 @@ program main
         Jc = Vm*(Ci-Gamma_star)/(Ci+Kc*(1.+Ox/Ko))
         Je = (alpha_q*I*Jm/(sqrt(Jm**2+alpha_q**2*I**2)))*((Ci-Gamma_star)/(4*(Ci+2*Gamma_star)))  
         A = min(Jc,Je)
-        !funeJ=alpha*Qaparx*eJmxT/(alpha*Qaparx+2.1*eJmxT) in TECO
         
         es = exp(21.382-5347.5/Tk)
         D = 0.1*es*(1-RH)
@@ -63,6 +66,7 @@ program main
         Reco = Reco0*Q10**(Ta/10)*(swc/(swc+a1)) ! Ta in degree C;a1:moisture coefficient at which respiration is half the maximum
         NEE = Reco-Ac
         
+        !write outputs 
         write(15,*)An,',',Ac,',',Reco,',',NEE
         print*,'Vm=',Vm, 'A=',A
         print*,'Gs=',Gs, 'D=',D
