@@ -14,9 +14,20 @@ program main
         real:: es,D,Gs,An,Ac,Reco,NEE
         character:: header
         integer:: istat3,day,hour
+        character:: photo_type ! LUE or FvCB
+        
+        real,parameter:: LUE=0.08 ! g C(muE m-2 s-1)-1
+        real:: PAR,FAPAR,St,Sw
+        
         namelist /main_para/ f_Ci,alpha_q,Vm_25,Ea_vm,Gamma_star25,Ea_gamma,Ea_Kc, &
-                             Ea_Ko,Kc_25,Ko_25,r_JmVm,g1,D0,kn,Reco0,Q10,a1
+                             Ea_Ko,Kc_25,Ko_25,r_JmVm,g1,D0,kn,Reco0,Q10,a1,photo_type
 
+        select case(photo_type)
+        
+        case('LUE')
+        !GPP = PAR * FAPAR * LUE * St * Sw
+        
+        case('FvCB')
         open(11,file='FBEM_namelist.nml')
         read(11,nml=main_para)
         close(11)
@@ -79,6 +90,9 @@ program main
         close(13)
         close(14)
         close(15)
+        
+        end select 
+        
     contains
 
 !      function Jc(Vmx,Ci,Gamma_star,Kc,Ox,Ko)
